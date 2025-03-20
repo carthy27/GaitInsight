@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Button, StyleSheet, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import styles from "../styles/SingIn"; 
 
 export default function SignIn() {
   const handlePress = () => {
@@ -13,11 +14,3 @@ export default function SignIn() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

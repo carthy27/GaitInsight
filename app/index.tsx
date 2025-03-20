@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-
+import SignIn from "./component/SignIn";
 export default function Index() {
   return (
     <View
@@ -10,6 +10,7 @@ export default function Index() {
       }}
     >
       <Text>We are now using app ass the main file.</Text>
+      <SignIn />
     </View>
   );
 }
