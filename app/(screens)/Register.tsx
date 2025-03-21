@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text } from "react-native";
-import SignIn from "./component/SignIn";
+import { Text, View } from "react-native";
 
-export default function Index() {
+import SignIn from "../component/SignIn";
 
+
+export default function Register() {
   return (
-        <View
+    <View
       style={{
         flex: 1,
         justifyContent: "center",
@@ -16,6 +17,5 @@ export default function Index() {
       <Text>We are now using register.tsx as index file.</Text>
       <SignIn />
     </View>
-  
   );
 }

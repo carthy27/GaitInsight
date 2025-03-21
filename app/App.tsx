@@ -1,15 +1,5 @@
-import React from "react";
-import { StyleSheet } from "react-native"; // Import StyleSheet from react-native
-import Index from "."; // Import the Index component
+import { ExpoRoot } from "expo-router";
 
 export default function App() {
-  return <Index />; // Render the Index component
+  return  <ExpoRoot />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
