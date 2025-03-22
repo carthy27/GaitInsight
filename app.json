@@ -7,6 +7,14 @@
     "icon": "./assets/icon.png",
     "scheme": "gaitinsight",
     "userInterfaceStyle": "automatic",
+    
+   
+        "experiments": {
+          "typedRoutes": true
+        }
+      ,
+    
+    
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -31,7 +39,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro"
     }
   }
 }

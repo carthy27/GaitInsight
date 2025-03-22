@@ -1,21 +1,10 @@
-import React from "react";
-import { View, Text } from "react-native";
-import SignIn from "./component/SignIn";
+import { registerRootComponent } from "expo";
+import { ExpoRoot } from "expo-router";
 
-export default function Index() {
-
-  return (
-        <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      
-      <Text>We are now using register.tsx as index file.</Text>
-      <SignIn />
-    </View>
-  
-  );
+// Must be exported or Fast Refresh won't update the context
+export function App() {
+	const ctx = require.context("./src/app");
+	return <ExpoRoot context={ctx} />;
 }
+
+registerRootComponent(App);
