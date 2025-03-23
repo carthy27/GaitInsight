@@ -13,5 +13,5 @@
     "**/*.ts",
     "**/*.tsx",
     "app/assets/google.jsx"
-, "index.js"  ]
+, "index.js", "app/View/component/button.jsx"  ]
 }

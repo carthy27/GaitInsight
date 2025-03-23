@@ -1,7 +1,7 @@
 import { auth } from '../../Model/firebase';
 import { signInWithCredential, User } from 'firebase/auth';
 import * as Google from 'expo-auth-session/providers/google';
-import { googleAuthConfig, createGoogleCredential } from '../../context/AuthContext';
+//import { googleAuthConfig, createGoogleCredential } from '../../context/AuthContext';
 
 interface AuthResponse {
   success: boolean;
@@ -12,10 +12,10 @@ interface AuthResponse {
 class AuthController {
   private googleAuth: ReturnType<typeof Google.useAuthRequest> | undefined;
 
-  initializeGoogleAuth() {
-    this.googleAuth = Google.useAuthRequest(googleAuthConfig);
-    return this.googleAuth;
-  }
+  // initializeGoogleAuth() {
+  //   this.googleAuth = Google.useAuthRequest(googleAuthConfig);
+  //   return this.googleAuth;
+  // }
 
   async handleGoogleSignIn(): Promise<AuthResponse> {
     try {
@@ -31,12 +31,12 @@ class AuthController {
         }
         
         const { id_token } = result.params;
-        const credential = createGoogleCredential(id_token);
-        const userCredential = await signInWithCredential(auth, credential);
+        //const credential = createGoogleCredential(id_token);
+        //const userCredential = await signInWithCredential(auth, credential);
         
         return {
           success: true,
-          user: userCredential.user
+          //user: userCredential.user
         };
       }
 
