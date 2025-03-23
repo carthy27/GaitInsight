@@ -7,11 +7,10 @@
     "icon": "./assets/icon.png",
     "scheme": "gaitinsight",
     "userInterfaceStyle": "automatic",
-        "experiments": {
-          "typedRoutes": true,
-          "reactServerFunctions": true
-        }
-      ,
+    "experiments": {
+      "typedRoutes": true,
+      "reactServerFunctions": true
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,29 +23,32 @@
       "**/*"
     ],
     "plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
-        },
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
-        }
-      ]
+      ["expo-camera", {
+        "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+      }],
+      ["@react-native-google-signin/google-signin", {
+        "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
+      }]
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gaitinsight.firebasestorage"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.gaitinsight.firebasestorage"
     },
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dccece7a-cc19-4352-a538-6e66bcc10d16"
+      }
     }
   }
 }
