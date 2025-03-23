@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-import SignIn from "../component/SignIn";
+import SignIn from "./component/SignIn";
 
 
 export default function Register() {

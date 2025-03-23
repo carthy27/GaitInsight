@@ -7,14 +7,11 @@
     "icon": "./assets/icon.png",
     "scheme": "gaitinsight",
     "userInterfaceStyle": "automatic",
-    
-   
         "experiments": {
-          "typedRoutes": true
+          "typedRoutes": true,
+          "reactServerFunctions": true
         }
       ,
-    
-    
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -27,7 +24,12 @@
       "**/*"
     ],
     "plugins": [
-      "expo-router"
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
     ],
     "ios": {
       "supportsTablet": true

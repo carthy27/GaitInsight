@@ -1,9 +1,13 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import { useAuth } from '../context/AuthContext';
 
 export default function AboutScreen() {
+  const { user, signOut } = useAuth();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
+      <Text style={styles.text}>Welcome {user?.displayName}</Text>
+      <Button title="Sign Out" onPress={signOut} />
     </View>
   );
 }

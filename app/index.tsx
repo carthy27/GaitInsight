@@ -1,10 +1,17 @@
-import { registerRootComponent } from "expo";
-import { ExpoRoot } from "expo-router";
+/// <reference types="react/canary" />
 
-// Must be exported or Fast Refresh won't update the context
-export function App() {
-	const ctx = require.context("./src/app");
-	return <ExpoRoot context={ctx} />;
+import React from 'react';
+import { ActivityIndicator } from 'react-native';
+import renderInfo from './actions/render-info';
+
+export default function Index() {
+  return (
+    <React.Suspense
+      fallback={
+        // The view that will render while the Server Function is awaiting data.
+        <ActivityIndicator />
+      }>
+      {renderInfo({ name: 'World' })}
+    </React.Suspense>
+  );
 }
-
-registerRootComponent(App);
