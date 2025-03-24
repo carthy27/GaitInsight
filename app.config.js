@@ -49,7 +49,16 @@ export default {
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
     },
     web: {
-      bundler: "metro"
+      bundler: "metro",
+      config: {
+        firebase: {
+          authDomain: "gaitinsight-46a89.firebaseapp.com"
+        }
+      },
+      headers: {
+        "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+        "Cross-Origin-Embedder-Policy": "require-corp"
+      }
     },
     extra: {
       eas: {

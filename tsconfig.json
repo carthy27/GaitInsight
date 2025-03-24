@@ -12,6 +12,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "app/assets/google.jsx"
-, "index.js", "app/View/component/button.jsx"  ]
+    "app/assets/google.jsx",
+    "index.js",
+    "app/View/component/button.jsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

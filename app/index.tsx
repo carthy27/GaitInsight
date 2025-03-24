@@ -1,27 +1,29 @@
-/// <reference types="react/canary" />
-
-import React, { useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { Redirect } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './Model/firebase';
 
 export default function Index() {
-  const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, navigate to home screen
-        router.replace('/(screens)/home');
-      } else {
-        // No user is signed in, navigate to login screen
-        router.replace('/(screens)/login');
-      }
-    });
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setIsAuthenticated(!!user);
+            setIsLoading(false);
+        });
 
-    return () => unsubscribe();
-  }, []);
+        return () => unsubscribe();
+    }, []);
 
-  return <ActivityIndicator />;
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
+    return isAuthenticated ? <Redirect href="/View/About" /> : <Redirect href="/View/Register" />;
 }

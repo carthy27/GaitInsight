@@ -12,16 +12,18 @@ interface AuthResponse {
 
 // Google Auth configuration
 const googleAuthConfig = {
-  clientId: '1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj.apps.googleusercontent.com',
-  androidClientId: '1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj.apps.googleusercontent.com',
-  iosClientId: '1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj.apps.googleusercontent.com',
+  clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID, 
+  androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID, 
+  iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
 };
 
 class AuthController {
   private googleAuth: ReturnType<typeof Google.useAuthRequest> | undefined;
 
   initializeGoogleAuth() {
-    this.googleAuth = Google.useAuthRequest(googleAuthConfig);
+    const [request, response, promptAsync] = Google.useAuthRequest(googleAuthConfig);
+    this.googleAuth = [request, response, promptAsync];
+    console.log('Google Auth initialized:', this.googleAuth); // Log the initialized googleAuth state
     return this.googleAuth;
   }
 
@@ -57,37 +59,52 @@ class AuthController {
 
   async handleGoogleSignIn(): Promise<AuthResponse> {
     try {
+      console.log('Google Auth state before sign-in:', this.googleAuth); // Log googleAuth state before sign-in
+
       if (!this.googleAuth) {
         throw new Error('Google Auth is not initialized');
       }
-      const [_, response, promptAsync] = this.googleAuth;
-      
-      if (!response) {
-        const result = await promptAsync();
-        if (result.type !== 'success') {
-          throw new Error('Google sign in was not successful');
-        }
-        
-        const { id_token } = result.params;
-        const credential = GoogleAuthProvider.credential(id_token);
-        const userCredential = await signInWithCredential(auth, credential);
-        
-        return {
-          success: true,
-          user: userCredential.user
-        };
+
+      const [request, response, promptAsync] = this.googleAuth;
+
+      console.log('Google Auth request:', request); // Log the request object
+      console.log('Google Auth response:', response); // Log the response object
+
+      // Prompt the user to sign in
+      const result = await promptAsync();
+
+      console.log('Google Auth result:', result); // Log the result of promptAsync
+
+      if (result.type !== 'success') {
+        throw new Error(result.type);
       }
 
-      return {
-        success: false,
-        error: 'Unexpected error occurred during Google sign-in'
-      };
+      // Extract the ID token from the result
+      const { id_token } = result.params;
 
+      if (!id_token) {
+        throw new Error('ID token is missing from Google sign-in response');
+      }
+
+      console.log('Google Auth ID token:', id_token); // Log the ID token
+
+      // Create a Firebase credential with the ID token
+      const credential = GoogleAuthProvider.credential(id_token);
+
+      // Sign in with Firebase using the credential
+      const userCredential = await signInWithCredential(auth, credential);
+
+      console.log('Firebase user credential:', userCredential); // Log the Firebase user credential
+
+      return {
+        success: true,
+        user: userCredential.user,
+      };
     } catch (error: any) {
-      console.error('Google sign-in error:', error);
+      console.error('Google sign-in error:', error); // Log the error
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }

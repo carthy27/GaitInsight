@@ -43,7 +43,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     setError(null);
     const result = await AuthController.handleGoogleSignIn();
     if (result.success) {
-      router.push('/About');
+      router.push('./View/(screens)/Register');
     } else {
       setError(result.error ?? 'Sign in failed');
     }
