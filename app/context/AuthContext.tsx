@@ -4,6 +4,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import AuthController from '../Controller/AuthController/authController';
 import { router } from 'expo-router';
 
+
 type AuthContextType = {
   user: User | null;
   loading: boolean;

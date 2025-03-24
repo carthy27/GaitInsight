@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+.yarn/
+npm-debug.*
 
 # Expo
 .expo/
@@ -33,12 +35,43 @@ yarn-error.*
 app/firebase/firebase.tsx
 firebase.tsx
 .env
-
+google-services.json
+GoogleService-Info.plist
+app/Model/firebase.tsx
 
 # local env files
 .env*.local
+.env
+.env.*
+*.env
 
 # typescript
 *.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build outputs
+build/
+dist/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.jest/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
 
 app-example

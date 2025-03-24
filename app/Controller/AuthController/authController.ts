@@ -1,21 +1,59 @@
 import { auth } from '../../Model/firebase';
-import { signInWithCredential, User } from 'firebase/auth';
+import { User, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import * as Google from 'expo-auth-session/providers/google';
-//import { googleAuthConfig, createGoogleCredential } from '../../context/AuthContext';
+import { authModel } from '../../Model/authModel';
 
+// Define the response type for authentication operations
 interface AuthResponse {
   success: boolean;
   user?: User | null;
   error?: string;
 }
 
+// Google Auth configuration
+const googleAuthConfig = {
+  clientId: '1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj.apps.googleusercontent.com',
+  androidClientId: '1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj.apps.googleusercontent.com',
+  iosClientId: '1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj.apps.googleusercontent.com',
+};
+
 class AuthController {
   private googleAuth: ReturnType<typeof Google.useAuthRequest> | undefined;
 
-  // initializeGoogleAuth() {
-  //   this.googleAuth = Google.useAuthRequest(googleAuthConfig);
-  //   return this.googleAuth;
-  // }
+  initializeGoogleAuth() {
+    this.googleAuth = Google.useAuthRequest(googleAuthConfig);
+    return this.googleAuth;
+  }
+
+  async handleEmailSignIn(email: string, password: string): Promise<AuthResponse> {
+    try {
+      const userCredential = await authModel.signIn(email, password);
+      return {
+        success: true,
+        user: userCredential.user
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async handleEmailSignUp(email: string, password: string): Promise<AuthResponse> {
+    try {
+      const userCredential = await authModel.signUp(email, password);
+      return {
+        success: true,
+        user: userCredential.user
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
 
   async handleGoogleSignIn(): Promise<AuthResponse> {
     try {
@@ -31,16 +69,15 @@ class AuthController {
         }
         
         const { id_token } = result.params;
-        //const credential = createGoogleCredential(id_token);
-        //const userCredential = await signInWithCredential(auth, credential);
+        const credential = GoogleAuthProvider.credential(id_token);
+        const userCredential = await signInWithCredential(auth, credential);
         
         return {
           success: true,
-          //user: userCredential.user
+          user: userCredential.user
         };
       }
 
-      // Add a fallback return statement
       return {
         success: false,
         error: 'Unexpected error occurred during Google sign-in'
@@ -57,7 +94,7 @@ class AuthController {
 
   async handleSignOut(): Promise<AuthResponse> {
     try {
-      await auth.signOut();
+      await authModel.signOut();
       return {
         success: true,
         user: null

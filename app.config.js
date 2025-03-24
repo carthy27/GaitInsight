@@ -1,43 +1,56 @@
-import { version } from './package.json';
-
 export default {
   expo: {
-    name: 'GaitInsight',
-    slug: 'gaitinsight',
-    scheme: 'gaitinsight',
-    version,
-    orientation: 'portrait',
-    icon: './assets/icon.png',
-    userInterfaceStyle: 'automatic',
-    splash: {
-      image: './assets/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#ffffff'
+    name: "GaitInsight",
+    slug: "gaitinsight",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    scheme: "gaitinsight",
+    userInterfaceStyle: "automatic",
+    experiments: {
+      typedRoutes: true,
+      reactServerFunctions: true
     },
-    web: {
-      bundler: 'metro',
-      output: 'static',
-      headers: {
-        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
-      }
+    splash: {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff"
+    },
+    updates: {
+      fallbackToCacheTimeout: 0
+    },
+    assetBundlePatterns: [
+      "**/*"
+    ],
+    plugins: [
+      ["expo-camera", {
+        cameraPermission: "Allow $(PRODUCT_NAME) to access your camera."
+      }],
+      ["@react-native-google-signin/google-signin", {
+        iosUrlScheme: "com.googleusercontent.apps.1026938501679-c7uctus7nc7cfusi7vduomtg1nm8nssj"
+      }],
+      ["expo-dev-client", {
+        launchMode: "most-recent"
+      }]
+    ],
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: "com.gaitinsight.firebasestorage",
+      googleServicesFile: process.env.GOOGLE_SERVICES_INFOPLIST,
+      buildNumber: "1"
     },
     android: {
-      package: "com.gaitinsight.firebasestorage",
-      googleServicesFile: "./google-services.json",
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff"
       },
-      permissions: [
-        "CAMERA",
-        "INTERNET",
-        "ACCESS_NETWORK_STATE"
-      ]
+      googleServicesFile: "./google-services.json",
+      package: "com.gaitinsight.firebasestorage",
+      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
     },
-    plugins: [
-      "expo-camera",
-      "@react-native-google-signin/google-signin"
-    ],
+    web: {
+      bundler: "metro"
+    },
     extra: {
       eas: {
         projectId: "dccece7a-cc19-4352-a538-6e66bcc10d16"

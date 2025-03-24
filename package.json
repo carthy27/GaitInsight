@@ -55,7 +55,9 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "react-router-dom": "^7.4.0",
-    "undefined": "expo-auth-session/providers/google"
+    "react-use-googlelogin": "^0.12.5",
+    "undefined": "expo-auth-session/providers/google",
+    "expo-dev-client": "~5.0.14"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
