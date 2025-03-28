@@ -12,8 +12,8 @@ const StackLayout = () => {
       },
     }}>
       <Stack.Screen name="index" options={{ title: "Sign In" }} />
-      <Stack.Screen name="(screens)/About" options={{ title: "About" }} />
-      <Stack.Screen name="(screens)/Register" options={{ title: "Register" }} />
+      <Stack.Screen name="About" options={{ title: "About" }} />
+      <Stack.Screen name="Register" options={{ title: "Register" }} />
     </Stack>
   );
 };
