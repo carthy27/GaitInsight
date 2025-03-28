@@ -113,11 +113,9 @@ class AuthController {
     try {
       await authModel.signOut();
       return {
-        success: true,
-        user: null
+        success: true
       };
     } catch (error: any) {
-      console.error('Sign out error:', error);
       return {
         success: false,
         error: error.message
@@ -126,4 +124,6 @@ class AuthController {
   }
 }
 
-export default new AuthController();
+// Make sure you export the controller as a singleton instance
+const authController = new AuthController();
+export default authController;

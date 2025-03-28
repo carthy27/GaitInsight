@@ -49,6 +49,7 @@ export const authModel: AuthModel = {
         try {
             await firebaseSignOut(auth);
             await AsyncStorage.removeItem('user');
+            console.log('User signed out successfully');
         } catch (error) {
             console.error('Sign out error:', error);
             throw error;

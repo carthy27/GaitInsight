@@ -11,7 +11,6 @@ const StackLayout = () => {
         fontWeight: 'bold',
       },
     }}>
-      <Stack.Screen name="index" options={{ title: "Sign In" }} />
       <Stack.Screen name="About" options={{ title: "About" }} />
       <Stack.Screen name="Register" options={{ title: "Register" }} />
     </Stack>
