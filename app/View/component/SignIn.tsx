@@ -14,9 +14,9 @@ export default function SignIn() {
         onPress={signIn}
         disabled={loading}
       />
-      <Link href="./(screens)/About.tsx" style={styles.button}>{error} </Link>
-      {/* <Link href="/Register"><GoogleLogo  /> </Link>   */}
-      <Link href="/(screens)/Register" style={styles.button}>Register</Link>
+      <Link href="/" style={styles.button}>{error} </Link>
+      <Link href="/View/About">About </Link>  
+      <Link href="/View/Register" style={styles.button}>Register</Link>
     </View>
   );
 }

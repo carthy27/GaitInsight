@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../Model/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import AuthController from '../Controller/AuthController/authController';
 import { router } from 'expo-router';
-
+import { useGoogleAuth } from '../hooks/useGoogleAuth';
+import AuthController from '../Controller/AuthController/authController';
 
 type AuthContextType = {
   user: User | null;
@@ -25,14 +25,26 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Use the custom hook
+  const { signInWithGoogle, error: googleError } = useGoogleAuth();
 
-  // Initialize Google Auth
-  const googleAuth = AuthController.initializeGoogleAuth();
+  useEffect(() => {
+    if (googleError) {
+      setError(googleError);
+    }
+  }, [googleError]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
+      
+      // Handle navigation based on auth state
+      if (user) {
+        // User is signed in, navigate to the main app
+        router.push('/View/About'); // Use correct path
+      }
     });
 
     return unsubscribe;
@@ -41,13 +53,16 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const signIn = async () => {
     setLoading(true);
     setError(null);
-    const result = await AuthController.handleGoogleSignIn();
-    if (result.success) {
-      router.push('./View/(screens)/Register');
-    } else {
-      setError(result.error ?? 'Sign in failed');
+    
+    try {
+      await signInWithGoogle();
+      // Don't navigate here - the navigation will happen automatically 
+      // in the onAuthStateChanged listener which is more reliable
+    } catch (error: any) {
+      setError(error.message || 'Sign in failed');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const signOut = async () => {
@@ -55,7 +70,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     setError(null);
     const result = await AuthController.handleSignOut();
     if (result.success) {
-      router.push('/');
+      router.push('/'); // Navigate to home
     } else {
       setError(result.error || 'Sign out failed');
     }
