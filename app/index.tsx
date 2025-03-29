@@ -25,5 +25,5 @@ export default function Index() {
         );
     }
 
-    return isAuthenticated ? <Redirect href="/View/About" /> : <Redirect href="/View/Register" />;
+    return isAuthenticated ? <Redirect href="/View/Dashboard" /> : <Redirect href="/View/Register" />;
 }

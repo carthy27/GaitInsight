@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator,
 import { useAuth } from '../context/AuthContext';
 import AuthController from '../Controller/AuthController/authController';
 import { router } from 'expo-router';
+import { navigate } from 'expo-router/build/global-state/routing';
 
 export default function RegisterScreen() {
   // Form state for login
@@ -12,7 +13,7 @@ export default function RegisterScreen() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   // Access auth context (for current user and navigation)
-  const { user } = useAuth();
+  const { user, setShouldNavigate } = useAuth();
   
   // Handle email/password login
   const handleLogin = async () => {
@@ -28,9 +29,11 @@ export default function RegisterScreen() {
       
       // Call the auth controller to handle sign in
       const result = await AuthController.handleEmailSignIn(email, password);
-      
+      setShouldNavigate(true); // Enable navigation after login
+
       if (result.success) {
         console.log('Login successful');
+        router.replace("/View/Dashboard") // Navigate to the dashboard
         // No need to navigate here, the onAuthStateChanged listener in AuthContext will handle it
       } else {
         setErrorMessage(result.error || 'Failed to sign in');

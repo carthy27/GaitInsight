@@ -21,7 +21,7 @@ const AuthContext = createContext<AuthContextType>({
   signIn: async () => {},
   signOut: async () => {},
   error: null,
-  shouldNavigate: true,
+  shouldNavigate: false,
   setShouldNavigate: () => {}
 });
 
@@ -29,7 +29,8 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [shouldNavigate, setShouldNavigate] = useState(true);
+  // Default shouldNavigate to false to prevent automatic redirection
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   
   // Use the custom hook
   const { signInWithGoogle, error: googleError } = useGoogleAuth();
@@ -48,11 +49,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       // Log the navigation conditions
       console.log(`Navigation check: user=${!!user}, shouldNavigate=${shouldNavigate}, loading=${loading}`);
       
-      // Try navigation if user exists and shouldNavigate is true
+      // Only navigate if user exists AND shouldNavigate is explicitly set to true
+      // This prevents automatic navigation on initial load
       if (user && shouldNavigate) {
         try {
-          console.log('Attempting to navigate to About page');
-          router.push('/View/About');
+          console.log('Attempting to navigate to Dashboard page');
+          router.push('/View/Dashboard');
         } catch (error) {
           console.error('Navigation error:', error);
         }
@@ -62,11 +64,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     return unsubscribe;
   }, [shouldNavigate]); // Add shouldNavigate to the dependency array
 
+  // Remove the useEffect that handles navigation when user is null
+  // Or update it to only navigate to home if explicitly requested
   useEffect(() => {
-    // If user is null (signed out) and not loading, navigate to home
+    // If user is null (signed out) and not loading, navigate to home, but only when shouldNavigate is true
     if (user === null && !loading && shouldNavigate) {
-      // You can uncomment and use this if you want automatic navigation
-      // router.replace('/');
+      router.replace('/');
     }
   }, [user, loading, shouldNavigate]);
 
@@ -82,7 +85,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       if (user && shouldNavigate) {
         console.log('Explicitly navigating after sign-in');
         setTimeout(() => {
-          router.push('/View/About');
+          router.push('/View/Dashboard');
         }, 500); // Short delay to ensure state is updated
       }
     } catch (error: any) {
