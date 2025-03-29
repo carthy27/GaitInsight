@@ -25,5 +25,6 @@ export default function Index() {
         );
     }
 
+    // Redirect to Dashboard if logged in, otherwise to Register
     return isAuthenticated ? <Redirect href="/View/Dashboard" /> : <Redirect href="/View/Register" />;
 }

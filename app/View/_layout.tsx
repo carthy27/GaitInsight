@@ -1,8 +1,9 @@
-import { Stack } from "expo-router";
+import { Tabs } from "expo-router";
+import DashboardScreen from "./Dashboard";
 
-const StackLayout = () => {
+const TabsLayout = () => {
   return (
-    <Stack screenOptions={{
+    <Tabs screenOptions={{
       headerStyle: {
         backgroundColor: '#f4511e',
       },
@@ -11,10 +12,10 @@ const StackLayout = () => {
         fontWeight: 'bold',
       },
     }}>
-      <Stack.Screen name="Dashboard" options={{ title: "Dashboard" }} />
-      <Stack.Screen name="Register" options={{ title: "Register" }} />
-    </Stack>
+      <Tabs.Screen name="Dashboard" options={{ title: "Dashboard" }} />
+      <Tabs.Screen name="Register" options={{ title: "Register", headerShown: false  }} />
+    </Tabs>
   );
 };
 
-export default StackLayout;
+export default TabsLayout;

@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, ImageSourcePropType } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import GaitMetrics from './component/GaitMetricsCard';
 import GaitMetricsData, { getTopSubjects, getSubjectById, getRunningSubjects } from '../Model/gaitMetricsData';
+import { Asset } from 'expo-asset';
 
 export default function AboutScreen() {
   const { user, signOut, loading } = useAuth();
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'walking' | 'running'>('walking');
+  const [viewMode, setViewMode] = useState<'running'| 'walking'>('running');
+  const [imageUri, setImageUri] = useState<ImageSourcePropType | null>(null);
+  
+  // Load the image properly
+  useEffect(() => {
+    async function loadImage() {
+      try {
+        // Try loading the image from assets
+        const image = require('../assets/LogoGaitInsight.png');
+        setImageUri(image);
+      } catch (error) {
+        console.error("Failed to load image:", error);
+      }
+    }
+    
+    loadImage();
+  }, []);
   
   // Get either a specific subject or the top-scoring subjects for walking
   const walkingData = selectedSubjectId 
@@ -18,7 +35,7 @@ export default function AboutScreen() {
   const runningSubjects = getRunningSubjects();
   
   // Which data should we display based on mode?
-  const displayData = viewMode === 'walking' ? walkingData : runningSubjects;
+  const displayData = viewMode === 'running' ? runningSubjects : walkingData;
 
   const handleSignOut = async () => {
     try {
@@ -124,6 +141,15 @@ export default function AboutScreen() {
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Text style={styles.welcomeText}>Welcome {user?.displayName || user?.email}</Text>
+        
+        {/* Display the image only if it's loaded */}
+        {imageUri && (
+          <Image 
+            source={imageUri} 
+            style={styles.logo} 
+            onError={(e) => console.error("Image error:", e.nativeEvent.error)}
+          />
+        )}
         
         {/* Toggle between walking and running view */}
         <View style={styles.viewToggleContainer}>
@@ -254,6 +280,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
   },
   viewToggleContainer: {
     flexDirection: 'row',

@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import AuthController from '../Controller/AuthController/authController';
-import { router } from 'expo-router';
-import { navigate } from 'expo-router/build/global-state/routing';
+import { router, Stack } from 'expo-router';
+import { registerStyles as styles } from './styles/RegisterStyles';
+
+// Add this to hide the header
+export const screenOptions = {
+  headerShown: false,
+};
 
 export default function RegisterScreen() {
   // Form state for login
@@ -13,7 +18,18 @@ export default function RegisterScreen() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   // Access auth context (for current user and navigation)
-  const { user, setShouldNavigate } = useAuth();
+  const { user, shouldNavigate, setShouldNavigate } = useAuth();
+  
+  // Navigation logic with useEffect to avoid navigation during render
+  useEffect(() => {
+    // Debug log for your navigation state
+    console.log(`Navigation check: user=${!!user}, shouldNavigate=${shouldNavigate}, loading=${isLoading}`);
+    
+    // If user is authenticated and navigation is allowed, redirect to dashboard
+    if (user && shouldNavigate) {
+      router.replace("/View/Dashboard");
+    }
+  }, [user, shouldNavigate, isLoading]);
   
   // Handle email/password login
   const handleLogin = async () => {
@@ -29,12 +45,11 @@ export default function RegisterScreen() {
       
       // Call the auth controller to handle sign in
       const result = await AuthController.handleEmailSignIn(email, password);
-      setShouldNavigate(true); // Enable navigation after login
-
+      
       if (result.success) {
         console.log('Login successful');
-        router.replace("/View/Dashboard") // Navigate to the dashboard
-        // No need to navigate here, the onAuthStateChanged listener in AuthContext will handle it
+        setShouldNavigate(true); // Enable navigation after login
+        // Navigation will be handled by useEffect
       } else {
         setErrorMessage(result.error || 'Failed to sign in');
       }
@@ -67,6 +82,7 @@ export default function RegisterScreen() {
       const result = await AuthController.handleEmailSignUp(email, password);
       
       if (result.success) {
+        handleLogin();
         Alert.alert('Success', 'Account created successfully');
         // No need to navigate here, the onAuthStateChanged listener in AuthContext will handle it
       } else {
@@ -103,6 +119,8 @@ export default function RegisterScreen() {
         placeholderTextColor="#888"
         value={password}
         onChangeText={setPassword}
+        returnKeyType="done"
+        onSubmitEditing={handleLogin}
         secureTextEntry
         autoCapitalize="none"
         autoCorrect={false}
@@ -149,62 +167,3 @@ export default function RegisterScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#25292e',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 30,
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingHorizontal: 15,
-    fontSize: 16,
-  },
-  button: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#4285F4', // Google blue
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 15,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  registerButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#4285F4',
-  },
-  registerButtonText: {
-    color: '#4285F4',
-  },
-  errorText: {
-    color: '#FF6B6B',
-    marginVertical: 10,
-    textAlign: 'center',
-  },
-  backButton: {
-    marginTop: 30,
-  },
-  backButtonText: {
-    color: '#aaa',
-    fontSize: 14,
-  },
-});

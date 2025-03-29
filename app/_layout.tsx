@@ -12,11 +12,11 @@ export default function RootLayout() {
         headerTintColor: '#fff',
         headerTitleStyle: {
           fontWeight: 'bold',
-        },
+        }, headerShown: false 
       }}>
-        <Stack.Screen name="index" options={{ title: "Sign In" }} />
-        <Stack.Screen name="View/Dashboard" options={{ title: "Dashboard" }} />
-        <Stack.Screen name="View/Register" options={{ title: "Register" }} />
+        <Stack.Screen name="index" options={{ title: "Sign In", headerShown: false  }} />
+        <Stack.Screen name="View/Dashboard" options={{ title: "Dashboard", headerShown: false  }} />
+        <Stack.Screen name="View/Register" options={{ title: "Register", headerShown: false  }} />
       </Stack>
     </AuthProvider>
   );
