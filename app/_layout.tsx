@@ -6,17 +6,12 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <Stack screenOptions={{
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        }, headerShown: false 
+        headerShown: false
       }}>
-        <Stack.Screen name="index" options={{ title: "Sign In", headerShown: false  }} />
-        <Stack.Screen name="View/Dashboard" options={{ title: "Dashboard", headerShown: false  }} />
-        <Stack.Screen name="View/Register" options={{ title: "Register", headerShown: false  }} />
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="/(auth)/Register" options={{ headerShown: false }} />
+        <Stack.Screen name="/(auth)/Login" options={{ headerShown: false }} />
       </Stack>
     </AuthProvider>
   );

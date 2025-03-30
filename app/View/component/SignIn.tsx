@@ -19,7 +19,7 @@ export default function SignIn() {
   const handleSignOut = async () => {
     setShouldNavigate(true);
     await signOut();
-    router.replace('/View/Register');
+    router.replace('/(auth)/Register');
   };
 
   // If user is already signed in, show a different UI
@@ -31,7 +31,7 @@ export default function SignIn() {
           style={styles.dashboardButton} 
           onPress={() => {
             setShouldNavigate(true);
-            router.push('/View/Dashboard');
+            router.push('/(tabs)/Dashboard');
           }}
         >
           <Text style={styles.buttonText}>Go to Dashboard</Text>
@@ -59,7 +59,7 @@ export default function SignIn() {
         </View>
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
-      <Link href="/View/Register" style={styles.registerLink}>Register</Link>
+      <Link href="/(auth)/Register" style={styles.registerLink}>Register</Link>
     </View>
   );
 }

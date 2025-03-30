@@ -57,4 +57,10 @@ export const registerStyles = StyleSheet.create({
     color: '#aaa',
     fontSize: 14,
   },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+    alignSelf: 'center'
+  }
 });

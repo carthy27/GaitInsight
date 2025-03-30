@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, ImageSourcePropType } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-import GaitMetrics from './component/GaitMetricsCard';
+import GaitMetrics from '../View/component/GaitMetricsCard';
 import GaitMetricsData, { getTopSubjects, getSubjectById, getRunningSubjects } from '../Model/gaitMetricsData';
 import { Asset } from 'expo-asset';
 

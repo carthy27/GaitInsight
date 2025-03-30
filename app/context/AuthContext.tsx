@@ -54,7 +54,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       if (user && shouldNavigate) {
         try {
           console.log('Attempting to navigate to Dashboard page');
-          router.push('/View/Dashboard');
+          router.push('/(tabs)/Dashboard');
         } catch (error) {
           console.error('Navigation error:', error);
         }
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       if (user && shouldNavigate) {
         console.log('Explicitly navigating after sign-in');
         setTimeout(() => {
-          router.push('/View/Dashboard');
+          router.push('/(tabs)/Dashboard');
         }, 500); // Short delay to ensure state is updated
       }
     } catch (error: any) {

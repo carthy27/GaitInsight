@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, Image, ImageSourcePropType } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import AuthController from '../Controller/AuthController/authController';
 import { router, Stack } from 'expo-router';
-import { registerStyles as styles } from './styles/RegisterStyles';
+import { registerStyles as styles } from '../View/styles/RegisterStyles';
 
 // Add this to hide the header
 export const screenOptions = {
@@ -16,9 +16,20 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [logoImage, setLogoImage] = useState<ImageSourcePropType | null>(null);
   
   // Access auth context (for current user and navigation)
   const { user, shouldNavigate, setShouldNavigate } = useAuth();
+  
+  // Load the logo
+  useEffect(() => {
+    try {
+      const image = require('../assets/LogoGaitInsight.png');
+      setLogoImage(image);
+    } catch (error) {
+      console.error("Failed to load logo image:", error);
+    }
+  }, []);
   
   // Navigation logic with useEffect to avoid navigation during render
   useEffect(() => {
@@ -27,7 +38,7 @@ export default function RegisterScreen() {
     
     // If user is authenticated and navigation is allowed, redirect to dashboard
     if (user && shouldNavigate) {
-      router.replace("/View/Dashboard");
+      router.replace("/(tabs)/Dashboard");
     }
   }, [user, shouldNavigate, isLoading]);
   
@@ -98,6 +109,15 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Logo Image */}
+      {logoImage && (
+        <Image 
+          source={logoImage}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      )}
+      
       <Text style={styles.title}>Account Access</Text>
       
       {/* Email Input */}

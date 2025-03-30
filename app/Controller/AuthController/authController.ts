@@ -1,6 +1,7 @@
 import { auth } from '../../Model/firebase';
 import { User, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import * as Google from 'expo-auth-session/providers/google';
+import { AuthSessionResult } from 'expo-auth-session'; // Import the type from main package
 import { authModel } from '../../Model/authModel';
 
 // Define the response type for authentication operations
@@ -18,13 +19,13 @@ const googleAuthConfig = {
 };
 
 class AuthController {
-  private googleAuth: ReturnType<typeof Google.useAuthRequest> | undefined;
+  // Store the Google Auth passed from the component
+  private googleAuth: ReturnType<typeof Google.useAuthRequest> | null = null;
 
-  initializeGoogleAuth() {
-    const [request, response, promptAsync] = Google.useAuthRequest(googleAuthConfig);
-    this.googleAuth = [request, response, promptAsync];
-    console.log('Google Auth initialized:', this.googleAuth); // Log the initialized googleAuth state
-    return this.googleAuth;
+  // Method to set the Google Auth from the component
+  setGoogleAuth(auth: ReturnType<typeof Google.useAuthRequest>) {
+    this.googleAuth = auth;
+    console.log('Google Auth set in controller');
   }
 
   async handleEmailSignIn(email: string, password: string): Promise<AuthResponse> {
@@ -57,36 +58,60 @@ class AuthController {
     }
   }
 
+  // This method triggers Google Sign-in process
   async handleGoogleSignIn(): Promise<AuthResponse> {
     try {
-      console.log('Google Auth state before sign-in:', this.googleAuth); // Log googleAuth state before sign-in
-
       if (!this.googleAuth) {
-        throw new Error('Google Auth is not initialized');
+        return {
+          success: false,
+          error: 'Google Auth is not initialized'
+        };
       }
 
-      const [request, response, promptAsync] = this.googleAuth;
+      const [request, , promptAsync] = this.googleAuth;
 
-      console.log('Google Auth request:', request); // Log the request object
-      console.log('Google Auth response:', response); // Log the response object
+      if (!request) {
+        return {
+          success: false,
+          error: 'Google Auth request is not ready'
+        };
+      }
 
-      // Prompt the user to sign in
-      const result = await promptAsync();
+      // Trigger the sign-in flow
+      await promptAsync();
+      
+      // Return success - the actual response will be handled separately
+      return {
+        success: true
+      };
+    } catch (error: any) {
+      console.error('Google sign-in error:', error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
 
-      console.log('Google Auth result:', result); // Log the result of promptAsync
-
-      if (result.type !== 'success') {
-        throw new Error(result.type);
+  // This method processes the Google Sign-in response
+  async processGoogleSignInResponse(response: AuthSessionResult): Promise<AuthResponse> {
+    try {
+      if (response.type !== 'success') {
+        return {
+          success: false,
+          error: `Google sign-in failed: ${response.type}`
+        };
       }
 
       // Extract the ID token from the result
-      const { id_token } = result.params;
+      const { id_token } = response.params;
 
       if (!id_token) {
-        throw new Error('ID token is missing from Google sign-in response');
+        return {
+          success: false,
+          error: 'ID token is missing from Google sign-in response'
+        };
       }
-
-      console.log('Google Auth ID token:', id_token); // Log the ID token
 
       // Create a Firebase credential with the ID token
       const credential = GoogleAuthProvider.credential(id_token);
@@ -94,14 +119,14 @@ class AuthController {
       // Sign in with Firebase using the credential
       const userCredential = await signInWithCredential(auth, credential);
 
-      console.log('Firebase user credential:', userCredential); // Log the Firebase user credential
+      console.log('Firebase user signed in:', userCredential.user.email);
 
       return {
         success: true,
         user: userCredential.user,
       };
     } catch (error: any) {
-      console.error('Google sign-in error:', error); // Log the error
+      console.error('Error processing Google sign-in:', error);
       return {
         success: false,
         error: error.message,
